@@ -1,8 +1,13 @@
 # zsh-codestats
 # https://github.com/dancek/zsh-codestats
 
+_codestats_version="0.1.0"
+
 typeset -i _codestats_keypress_count
+_codestats_keypress_count=0
+
 typeset -i _codestats_pulse_time
+_codestats_pulse_time=$(date +%s)
 
 # Widget wrapper: add a keypress and call original widget
 _codestats_call_widget()
@@ -15,7 +20,11 @@ _codestats_call_widget()
 _codestats_rebind_widgets()
 {
     local w
-    for w in self-insert delete-char backward-delete-char accept-line
+    for w in \
+        self-insert \
+        delete-char \
+        backward-delete-char \
+        accept-line
     do
         # call the internal version, ie. the one beginning with `.`
         eval "_codestats_${w} () { _codestats_call_widget .${w} -- \"\$@\" }"
@@ -26,17 +35,42 @@ _codestats_rebind_widgets()
 # Pulse sending function
 _codestats_send_pulse()
 {
-    if [ $_codestats_keypress_count -gt 0 ]; then
-        # TODO: http
-        echo "Code::Stats keypress count: ${_codestats_keypress_count}"
+    if (( ${_codestats_keypress_count} > 0 )); then
+        local payload
+        payload=$(_codestats_payload ${_codestats_keypress_count})
+
+        curl \
+            --header "Content-Type: application/json" \
+            --header "X-API-Token: ${CODESTATS_API_KEY}" \
+            --user-agent "zsh-codestats/${_codestats_version}" \
+            --data "${payload}" \
+            --silent \
+            --output /dev/null \
+            --show-error \
+            --request POST \
+            https://codestats.net/api/my/pulses \
+            &|
+
         _codestats_keypress_count=0
     fi
+}
+
+# Create API payload
+_codestats_payload() {
+    cat <<EOF
+{
+    "coded_at": "$(date +%Y-%m-%dT%H:%M:%S%z)",
+    "xps": [{"language": "zsh", "xp": $1}]
+}
+EOF
 }
 
 # Check time since last pulse; maybe send pulse
 _codestats_poll()
 {
-    local now=$(date +%s)
+    local now
+    now=$(date +%s)
+    echo $((now - _codestats_pulse_time))
     if [ $((now - _codestats_pulse_time)) -gt 10 ]; then
         _codestats_send_pulse
         _codestats_pulse_time=${now}
@@ -54,4 +88,9 @@ _codestats_init()
     # FIXME: the last commands before zsh exit are not logged
 }
 
-_codestats_init
+if (( ${+CODESTATS_API_KEY} )); then
+    _codestats_init
+else
+    echo "zsh-codestats requires CODESTATS_API_KEY to be set!"
+    false
+fi

@@ -22,4 +22,4 @@ TODO: zgen and other plugin managers
 
 Plugins that wrap ZLE widgets should probably be loaded after `zsh-codestats`. For example, [`zsh-syntax-highlighting`](https://github.com/zsh-users/zsh-syntax-highlighting) needs to be loaded after `zsh-codestats` for it to work properly.
 
-As a rule of thumb, loading `zsh-codestats` is not a bad idea.
+As a rule of thumb, loading `zsh-codestats` early is not a bad idea.
