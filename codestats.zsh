@@ -1,7 +1,7 @@
 # zsh-codestats
 # https://github.com/dancek/zsh-codestats
 
-_codestats_version="0.1.0"
+_codestats_version="0.1.1"
 
 declare -g -i _codestats_keypress_count=0
 declare -g -i _codestats_pulse_time=$(date +%s)
@@ -57,7 +57,7 @@ _codestats_payload() {
     cat <<EOF
 {
     "coded_at": "$(date +%Y-%m-%dT%H:%M:%S%z)",
-    "xps": [{"language": "zsh", "xp": $1}]
+    "xps": [{"language": "Terminal (Zsh)", "xp": $1}]
 }
 EOF
 }
