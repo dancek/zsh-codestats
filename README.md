@@ -8,15 +8,25 @@ This plugin sends all the pulses using the language `zsh`. This should prevent c
 
 ## Installation
 
-Clone this git repo.
+Get your personal API key from https://codestats.net/my/machines and set environment variable `CODESTATS_API_KEY`.
+
+### Manual installation
+
+Clone this git repo and source the script directly.
 
 ```
+CODESTATS_API_KEY="SFMyNTY.OEotWWdnPT0jI01qaz0.X0wVEZquh8Ogau1iTtBihYqqL71FD8N6p5ChQiIpaxQ"
 source codestats.zsh
 ```
 
-TODO: Code::Stats api key
+### Plugin managers (zgen, ...)
 
-TODO: zgen and other plugin managers
+TODO
+
+## Options
+
+- `CODESTATS_API_KEY`: the API key used when submitting pulses. Required.
+- `CODESTATS_API_URL`: the base URL to the Code::Stats API. Only set this if you know what you're doing! :)
 
 ## Other plugins
 

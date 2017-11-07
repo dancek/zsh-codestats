@@ -33,8 +33,7 @@ _codestats_rebind_widgets()
 _codestats_send_pulse()
 {
     if (( ${_codestats_keypress_count} > 0 )); then
-        local payload
-        payload=$(_codestats_payload ${_codestats_keypress_count})
+        local payload=$(_codestats_payload ${_codestats_keypress_count})
 
         curl \
             --header "Content-Type: application/json" \
@@ -45,15 +44,21 @@ _codestats_send_pulse()
             --output /dev/null \
             --show-error \
             --request POST \
-            https://codestats.net/api/my/pulses \
+            $(_codestats_pulse_url) \
             &|
 
         _codestats_keypress_count=0
     fi
 }
 
+_codestats_pulse_url()
+{
+    echo "${CODESTATS_API_URL:-https://codestats.net}/api/my/pulses"
+}
+
 # Create API payload
-_codestats_payload() {
+_codestats_payload()
+{
     cat <<EOF
 {
     "coded_at": "$(date +%Y-%m-%dT%H:%M:%S%z)",
