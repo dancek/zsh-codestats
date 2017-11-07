@@ -8,16 +8,14 @@ All the pulses are sent using the language `Terminal (Zsh)`.
 
 ## Installation
 
-Get your personal API key from https://codestats.net/my/machines and set environment variable `CODESTATS_API_KEY`.
+1. Ensure you have [`curl`](https://curl.haxx.se/).
+1. Get your personal API key from https://codestats.net/my/machines and set environment variable in e.g. `.zshrc`.
+    ```
+    CODESTATS_API_KEY="<api key here>"
+    ```
+1. Install and source the script in one of the following ways (in `.zshrc` after the environment variable):
 
-```
-CODESTATS_API_KEY="<api key here>"
-```
-
-This needs to be before the script is loaded, whichever way you choose to do it.
-
-
-### Zgem
+### Zgen
 
 ```
 zgen load dancek/zsh-codestats
