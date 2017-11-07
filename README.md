@@ -40,6 +40,7 @@ Probably just pointing to the git repo will work.
 
 - `CODESTATS_API_KEY`: the API key used when submitting pulses. Required.
 - `CODESTATS_API_URL`: the base URL to the Code::Stats API. Only set this if you know what you're doing! :)
+- `CODESTATS_LOG_FILE`: a log file for debugging. Must exist and be writable.
 
 ## Other plugins
 

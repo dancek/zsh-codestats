@@ -1,11 +1,19 @@
 # zsh-codestats
 # https://github.com/dancek/zsh-codestats
 
-_codestats_version="0.2.0-beta.2"
+_codestats_version="0.2.0-beta.3"
 
 declare -g -i _codestats_xp=0
 declare -g -i _codestats_pulse_time
 _codestats_pulse_time=$(date +%s)
+
+# Logging: write to file if CODESTATS_LOG_FILE is set and exists
+_codestats_log()
+{
+    if [ -w "${CODESTATS_LOG_FILE}" ]; then
+        echo "$(date +%Y-%m-%dT%H:%M:%S) ($$) $@" >> "${CODESTATS_LOG_FILE}"
+    fi
+}
 
 # Widget wrapper: add a keypress and call original widget
 _codestats_call_widget()
@@ -27,6 +35,8 @@ _codestats_rebind_widgets()
         # call the internal version, ie. the one beginning with `.`
         eval "_codestats_${w} () { _codestats_call_widget .${w} -- \"\$@\" }"
         zle -N ${w} _codestats_${w}
+
+        _codestats_log "Wrapped and rebound the ${w} widget."
     done
 }
 
@@ -34,6 +44,16 @@ _codestats_rebind_widgets()
 _codestats_send_pulse()
 {
     if (( _codestats_xp > 0 )); then
+        local url
+        url="$(_codestats_pulse_url)"
+
+        _codestats_log "Sending pulse (${_codestats_xp} xp) to ${url}"
+
+        local error_file=/dev/null
+        if [ -w "${CODESTATS_LOG_FILE}" ]; then
+            error_file="${CODESTATS_LOG_FILE}"
+        fi
+
         local payload
         payload=$(_codestats_payload ${_codestats_xp})
 
@@ -46,7 +66,8 @@ _codestats_send_pulse()
             --output /dev/null \
             --show-error \
             --request POST \
-            "$(_codestats_pulse_url)" \
+            "${url}" \
+            2>> "$error_file" \
             &|
 
         _codestats_xp=0
@@ -80,8 +101,16 @@ _codestats_poll()
     fi
 }
 
+_codestats_exit()
+{
+    _codestats_log "Shell is exiting. Calling _codestats_send_pulse one last time."
+    _codestats_send_pulse
+}
+
 _codestats_init()
 {
+    _codestats_log "Initializing zsh-codestats@${_codestats_version}..."
+
     _codestats_rebind_widgets
 
     # Call the polling function on each new prompt
@@ -89,7 +118,9 @@ _codestats_init()
     add-zsh-hook precmd _codestats_poll
 
     # Send pulse on shell exit
-    add-zsh-hook zshexit _codestats_send_pulse
+    add-zsh-hook zshexit _codestats_exit
+
+    _codestats_log "Initialization complete."
 }
 
 if (( ${+CODESTATS_API_KEY} )); then
@@ -97,4 +128,8 @@ if (( ${+CODESTATS_API_KEY} )); then
 else
     echo "zsh-codestats requires CODESTATS_API_KEY to be set!"
     false
+fi
+
+if [ -n "${CODESTATS_LOG_FILE}" -a ! -w "${CODESTATS_LOG_FILE}" ]; then
+    echo "Warning: CODESTATS_LOG_FILE needs to exist and be writable!"
 fi
