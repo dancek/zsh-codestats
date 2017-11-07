@@ -1,7 +1,7 @@
 # zsh-codestats
 # https://github.com/dancek/zsh-codestats
 
-_codestats_version="0.2.0-beta.3"
+_codestats_version="0.2.0-beta.4"
 
 declare -g -i _codestats_xp=0
 declare -g -i _codestats_pulse_time
@@ -11,7 +11,7 @@ _codestats_pulse_time=$(date +%s)
 _codestats_log()
 {
     if [ -w "${CODESTATS_LOG_FILE}" ]; then
-        echo "$(date +%Y-%m-%dT%H:%M:%S) ($$) $@" >> "${CODESTATS_LOG_FILE}"
+        echo "$(date +%Y-%m-%dT%H:%M:%S) ($$) $*" >> "${CODESTATS_LOG_FILE}"
     fi
 }
 
@@ -123,13 +123,13 @@ _codestats_init()
     _codestats_log "Initialization complete."
 }
 
-if (( ${+CODESTATS_API_KEY} )); then
+if [ -n "${CODESTATS_API_KEY}" ]; then
     _codestats_init
 else
     echo "zsh-codestats requires CODESTATS_API_KEY to be set!"
     false
 fi
 
-if [ -n "${CODESTATS_LOG_FILE}" -a ! -w "${CODESTATS_LOG_FILE}" ]; then
+if [ -n "${CODESTATS_LOG_FILE}" ] && [ ! -w "${CODESTATS_LOG_FILE}" ]; then
     echo "Warning: CODESTATS_LOG_FILE needs to exist and be writable!"
 fi
