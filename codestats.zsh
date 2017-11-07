@@ -1,15 +1,16 @@
 # zsh-codestats
 # https://github.com/dancek/zsh-codestats
 
-_codestats_version="0.1.1"
+_codestats_version="0.2.0-beta.1"
 
-declare -g -i _codestats_keypress_count=0
-declare -g -i _codestats_pulse_time=$(date +%s)
+declare -g -i _codestats_xp=0
+declare -g -i _codestats_pulse_time
+_codestats_pulse_time=$(date +%s)
 
 # Widget wrapper: add a keypress and call original widget
 _codestats_call_widget()
 {
-    _codestats_keypress_count+=1
+    _codestats_xp+=1
     builtin zle "$@"
 }
 
@@ -32,8 +33,9 @@ _codestats_rebind_widgets()
 # Pulse sending function
 _codestats_send_pulse()
 {
-    if (( ${_codestats_keypress_count} > 0 )); then
-        local payload=$(_codestats_payload ${_codestats_keypress_count})
+    if (( _codestats_xp > 0 )); then
+        local payload
+        payload=$(_codestats_payload ${_codestats_xp})
 
         curl \
             --header "Content-Type: application/json" \
@@ -44,10 +46,10 @@ _codestats_send_pulse()
             --output /dev/null \
             --show-error \
             --request POST \
-            $(_codestats_pulse_url) \
+            "$(_codestats_pulse_url)" \
             &|
 
-        _codestats_keypress_count=0
+        _codestats_xp=0
     fi
 }
 
@@ -72,7 +74,7 @@ _codestats_poll()
 {
     local now
     now=$(date +%s)
-    if ((${now} - ${_codestats_pulse_time} > 10 )); then
+    if (( now - _codestats_pulse_time > 10 )); then
         _codestats_send_pulse
         _codestats_pulse_time=${now}
     fi
