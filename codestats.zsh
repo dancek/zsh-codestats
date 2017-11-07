@@ -3,11 +3,8 @@
 
 _codestats_version="0.1.0"
 
-typeset -i _codestats_keypress_count
-_codestats_keypress_count=0
-
-typeset -i _codestats_pulse_time
-_codestats_pulse_time=$(date +%s)
+declare -g -i _codestats_keypress_count=0
+declare -g -i _codestats_pulse_time=$(date +%s)
 
 # Widget wrapper: add a keypress and call original widget
 _codestats_call_widget()
@@ -70,8 +67,7 @@ _codestats_poll()
 {
     local now
     now=$(date +%s)
-    echo $((now - _codestats_pulse_time))
-    if [ $((now - _codestats_pulse_time)) -gt 10 ]; then
+    if ((${now} - ${_codestats_pulse_time} > 10 )); then
         _codestats_send_pulse
         _codestats_pulse_time=${now}
     fi
