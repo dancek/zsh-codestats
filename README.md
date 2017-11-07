@@ -2,26 +2,41 @@
 
 [Code::Stats](https://codestats.net/) plugin for [Zsh](http://www.zsh.org/).
 
-This is highly experimental. Note that logging what you type in your shell as code written may be frowned upon by the Code::Stats community.
+This plugin is an early beta, so expect some rough edges.
 
-This plugin sends all the pulses using the language `zsh`. This should prevent confusion.
+All the pulses are sent using the language `Terminal (Zsh)`.
 
 ## Installation
 
 Get your personal API key from https://codestats.net/my/machines and set environment variable `CODESTATS_API_KEY`.
+
+```
+CODESTATS_API_KEY="<api key here>"
+```
+
+This needs to be before the script is loaded, whichever way you choose to do it.
+
+
+### Zgem
+
+```
+zgen load dancek/zsh-codestats
+```
+
+Add a line for the plugin, run `zgen update` and restart your terminal.
 
 ### Manual installation
 
 Clone this git repo and source the script directly.
 
 ```
-CODESTATS_API_KEY="SFMyNTY.OEotWWdnPT0jI01qaz0.X0wVEZquh8Ogau1iTtBihYqqL71FD8N6p5ChQiIpaxQ"
 source codestats.zsh
 ```
 
-### Plugin managers (zgen, ...)
+### Other plugin managers (Zplug, Antigen, ...)
 
-TODO
+Probably just pointing to the git repo will work.
+
 
 ## Options
 
@@ -31,5 +46,3 @@ TODO
 ## Other plugins
 
 Plugins that wrap ZLE widgets should probably be loaded after `zsh-codestats`. For example, [`zsh-syntax-highlighting`](https://github.com/zsh-users/zsh-syntax-highlighting) needs to be loaded after `zsh-codestats` for it to work properly.
-
-As a rule of thumb, loading `zsh-codestats` early is not a bad idea.
