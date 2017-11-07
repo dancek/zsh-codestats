@@ -1,7 +1,7 @@
 # zsh-codestats
 # https://github.com/dancek/zsh-codestats
 
-_codestats_version="0.2.0-beta.1"
+_codestats_version="0.2.0-beta.2"
 
 declare -g -i _codestats_xp=0
 declare -g -i _codestats_pulse_time
@@ -88,7 +88,8 @@ _codestats_init()
     autoload -U add-zsh-hook
     add-zsh-hook precmd _codestats_poll
 
-    # FIXME: the last commands before zsh exit are not logged
+    # Send pulse on shell exit
+    add-zsh-hook zshexit _codestats_send_pulse
 }
 
 if (( ${+CODESTATS_API_KEY} )); then
