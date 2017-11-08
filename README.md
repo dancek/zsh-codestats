@@ -1,10 +1,8 @@
-# zsh-codestats
+# [Code::Stats](https://codestats.net/) plugin for [Zsh](http://www.zsh.org/)
 
-[Code::Stats](https://codestats.net/) plugin for [Zsh](http://www.zsh.org/).
+Zsh-codestats hooks onto Zsh, counts characters as you type and saves your statistics in Code::Stats. You'll receive XP for the language `Terminal (Zsh)` for each character, backspace/delete and enter you type.
 
 This plugin is an early beta, so expect some rough edges.
-
-All the pulses are sent using the language `Terminal (Zsh)`.
 
 ## Installation
 
@@ -21,7 +19,7 @@ All the pulses are sent using the language `Terminal (Zsh)`.
 zgen load dancek/zsh-codestats
 ```
 
-Add a line for the plugin, run `zgen update` and restart your terminal.
+Add a line for the plugin, run `zgen update`, then restart the shell by e.g. `exec zsh`.
 
 ### Manual installation
 
