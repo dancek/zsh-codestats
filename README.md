@@ -1,6 +1,6 @@
 # [Code::Stats](https://codestats.net/) plugin for [Zsh](http://www.zsh.org/)
 
-Zsh-codestats hooks onto Zsh, counts characters as you type and saves your statistics in Code::Stats. You'll receive XP for the language `Terminal (Zsh)` for each character, backspace/delete and enter you type.
+Code-stats-zsh hooks onto Zsh, counts characters as you type and saves your statistics in Code::Stats. You'll receive XP for the language `Terminal (Zsh)` for each character, backspace/delete and enter you type.
 
 This plugin is an early beta, so expect some rough edges.
 
@@ -16,7 +16,7 @@ This plugin is an early beta, so expect some rough edges.
 ### Zgen
 
 ```
-zgen load dancek/zsh-codestats
+zgen load git@gitlab.com:code-stats/code-stats-zsh.git
 ```
 
 Add a line for the plugin, run `zgen update`, then restart the shell by e.g. `exec zsh`.
@@ -42,4 +42,4 @@ Probably just pointing to the git repo will work.
 
 ## Other plugins
 
-Plugins that wrap ZLE widgets should probably be loaded after `zsh-codestats`. For example, [`zsh-syntax-highlighting`](https://github.com/zsh-users/zsh-syntax-highlighting) needs to be loaded after `zsh-codestats` for it to work properly.
+Plugins that wrap ZLE widgets should probably be loaded after `code-stats-zsh`. For example, [`zsh-syntax-highlighting`](https://github.com/zsh-users/zsh-syntax-highlighting) needs to be loaded after `code-stats-zsh` for it to work properly.

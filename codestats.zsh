@@ -1,7 +1,6 @@
-# zsh-codestats
-# https://github.com/dancek/zsh-codestats
+# https://gitlab.com/code-stats/code-stats-zsh
 
-_codestats_version="0.2.0-beta.4"
+_codestats_version="0.2.0"
 
 declare -g -i _codestats_xp=0
 declare -g -i _codestats_pulse_time
@@ -60,7 +59,7 @@ _codestats_send_pulse()
         curl \
             --header "Content-Type: application/json" \
             --header "X-API-Token: ${CODESTATS_API_KEY}" \
-            --user-agent "zsh-codestats/${_codestats_version}" \
+            --user-agent "code-stats-zsh/${_codestats_version}" \
             --data "${payload}" \
             --silent \
             --output /dev/null \
@@ -109,7 +108,7 @@ _codestats_exit()
 
 _codestats_init()
 {
-    _codestats_log "Initializing zsh-codestats@${_codestats_version}..."
+    _codestats_log "Initializing code-stats-zsh@${_codestats_version}..."
 
     _codestats_rebind_widgets
 
@@ -126,7 +125,7 @@ _codestats_init()
 if [ -n "${CODESTATS_API_KEY}" ]; then
     _codestats_init
 else
-    echo "zsh-codestats requires CODESTATS_API_KEY to be set!"
+    echo "code-stats-zsh requires CODESTATS_API_KEY to be set!"
     false
 fi
 
